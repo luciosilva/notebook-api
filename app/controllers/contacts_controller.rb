@@ -5,8 +5,11 @@ class ContactsController < ApplicationController
   def index
     @contacts = Contact.all
 
-#    render json: @contacts, root: true, only: [:name,:email]
-    render json: @contacts.map{|contact| contact.attributes.merge({autor: "Lúcio"})}, only: [:name,:autor]
+    render json: @contacts, methods: :birthdate_br, include: :kind
+#    render json: @contacts, include: {kind: { only: :description }}
+#    render json: @contacts, methods: [:kind_description]
+#    render json: @contacts# , root: true, only: [:name,:email]
+#    render json: @contacts.map{|contact| contact.attributes.merge({autor: "Lúcio"})}, only: [:name,:autor]
   end
 
   # GET /contacts/1
@@ -50,6 +53,6 @@ class ContactsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def contact_params
-      params.require(:contact).permit(:name, :email, :birthdate)
+      params.require(:contact).permit(:name, :email, :birthdate, :kind_id)
     end
 end
