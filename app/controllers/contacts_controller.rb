@@ -4,8 +4,8 @@ class ContactsController < ApplicationController
   # GET /contacts
   def index
     @contacts = Contact.all
-
-    render json: @contacts, methods: :birthdate_br, include: [:kind, :phones, :address]
+    render json: @contacts, include: [:kind]
+#    render json: @contacts, methods: :birthdate_br, include: [:kind, :phones, :address]
 #    render json: @contacts, include: {kind: { only: :description }}
 #    render json: @contacts, methods: [:kind_description]
 #    render json: @contacts# , root: true, only: [:name,:email]
@@ -14,7 +14,7 @@ class ContactsController < ApplicationController
 
   # GET /contacts/1
   def show
-    render json: @contact, include: [:kind, :phones, :address]
+    render json: @contact, include: [:kind]
 #    render json: @contact, include: {kind: { only: :description }}
 #    @contact = @contact.attributes.merge({autor: @contact.name})
 #    render json: @contact, methods: :author, only: [:name,:author]
@@ -26,7 +26,7 @@ class ContactsController < ApplicationController
     @contact = Contact.new(contact_params)
 
     if @contact.save
-      render json: @contact, include: [:kind, :phones, :address], status: :created, location: @contact
+      render json: @contact, include: [:kind], status: :created, location: @contact
     else
       render json: @contact.errors, status: :unprocessable_entity
     end
@@ -35,7 +35,7 @@ class ContactsController < ApplicationController
   # PATCH/PUT /contacts/1
   def update
     if @contact.update(contact_params)
-      render json: @contact, include: [:kind, :phones, :address]
+      render json: @contact, include: [:kind]
     else
       render json: @contact.errors, status: :unprocessable_entity
     end
@@ -60,4 +60,6 @@ class ContactsController < ApplicationController
         address_attributes: [:id, :street, :city]
       )
     end
+
+
 end
