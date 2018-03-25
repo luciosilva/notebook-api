@@ -5,7 +5,7 @@ class ContactsController < ApplicationController
   def index
     @contacts = Contact.all
 
-    render json: @contacts, methods: :birthdate_br, include: :kind
+    render json: @contacts, methods: :birthdate_br, include: [:kind, :phones, :address]
 #    render json: @contacts, include: {kind: { only: :description }}
 #    render json: @contacts, methods: [:kind_description]
 #    render json: @contacts# , root: true, only: [:name,:email]
@@ -14,7 +14,7 @@ class ContactsController < ApplicationController
 
   # GET /contacts/1
   def show
-    render json: @contact, include: [:kind, :phones]
+    render json: @contact, include: [:kind, :phones, :address]
 #    render json: @contact, include: {kind: { only: :description }}
 #    @contact = @contact.attributes.merge({autor: @contact.name})
 #    render json: @contact, methods: :author, only: [:name,:author]
@@ -26,7 +26,7 @@ class ContactsController < ApplicationController
     @contact = Contact.new(contact_params)
 
     if @contact.save
-      render json: @contact, include: [:kind, :phones], status: :created, location: @contact
+      render json: @contact, include: [:kind, :phones, :address], status: :created, location: @contact
     else
       render json: @contact.errors, status: :unprocessable_entity
     end
@@ -35,7 +35,7 @@ class ContactsController < ApplicationController
   # PATCH/PUT /contacts/1
   def update
     if @contact.update(contact_params)
-      render json: @contact, include: [:kind, :phones]
+      render json: @contact, include: [:kind, :phones, :address]
     else
       render json: @contact.errors, status: :unprocessable_entity
     end
@@ -56,7 +56,8 @@ class ContactsController < ApplicationController
     def contact_params
       params.require(:contact).permit(
         :name, :email, :birthdate, :kind_id,
-        phones_attributes: [:id, :number, :_destroy]
+        phones_attributes: [:id, :number, :_destroy],
+        address_attributes: [:id, :street, :city]
       )
     end
 end
